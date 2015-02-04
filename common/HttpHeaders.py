@@ -1,6 +1,5 @@
 # coding=utf8
-
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36',
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36',
            'Connection':
                'keep-alive', 'Content-Encoding': 'gzip', 'Content-Type': 'text/html; charset=UTF-8',
-           'Server': 'nginx', 'Transfer-Encoding': 'chunked'}
+           'Server': 'nginx', 'Transfer-Encoding': 'chunked', 'Etag': '96b3778b280d5f2ddb534b1669fa85e25078cdad'}
