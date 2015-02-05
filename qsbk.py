@@ -1,27 +1,63 @@
 # coding=utf-8
 
-import urllib, urllib2, cookielib
+import urllib, urllib2, cookielib, os
+from bs4 import BeautifulSoup
 
 from common import HttpHeaders
 
+currentPath = os.getcwd()
+print currentPath
+try:
+    os.mkdir("/qsbk")
+except Exception:
+    pass
+
+
+def decoder(content):
+    soup = BeautifulSoup(content)
+    for tag in soup.find_all('div', class_='article block untagged mb15'):
+        try:
+            sub = tag.find('img')
+            imgurl = sub.attrs['src']
+            print(imgurl)
+            request = urllib2.urlopen(imgurl)
+            data = request.read()
+            request.close
+            file = open(currentPath + "\qsbk\\" + imgurl.split('/')[-1], 'wb')
+            file.write(data)
+            file.close()
+        except AttributeError as e:
+            print e
+
 
 def page_loop(page=1):
-    url = "http://www.qiushibaike.com/8hr/page/%s?s=4743462" % page
+    print "第%s页" % page
+    url = "http://www.qiushibaike.com/imgrank/page/%s?s=4743721" % page
     request = urllib2.Request(url)
+    print request.get_full_url()
     for key in HttpHeaders.headers:
         request.add_header(key, HttpHeaders.headers[key])
     request.add_header('Referer', 'http://www.qiushibaike.com/')
     request.add_header('Origin', 'http://www.qiushibaike.com/')
     request.add_header('Cookie',
                        'bdshare_firstime=1421821228300; _qqq_uuid_=6ad5a178f7450619dc6f2a91af4cd3a7ed765f4f; __utmt=1; _qqq_user_id=8655363; Hm_lvt_2670efbdd59c7e3ed3749b458cafaa37=1421821228,1423038765,1423041805; Hm_lpvt_2670efbdd59c7e3ed3749b458cafaa37=1423041950; __utma=210674965.2057819279.1421821228.1423038765.1423041805.3; __utmb=210674965.6.10.1423041805; __utmc=210674965; __utmz=210674965.1421821228.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)')
+    try:
+        response = urllib2.urlopen(request)
+    except urllib2.HTTPError as e:
+        print e.reason, e.code, e.msg
+        print '异常，程序已终止'
+        return
 
-    response = urllib2.urlopen(request)
+    text = response.read()
+    decoder(text)
+
+    page_loop(page + 1)
 
 
 def login():
     url = 'http://www.qiushibaike.com/session.js'
     postData = {
-        'login': '%E6%B1%9F%E4%B8%9C%E5%AD%90%E5%BC%9F%E4%BD%95%E6%83%A7%E4%BA%8E%E5%A4%A9%E4%B8%8B',
+        'login': '江东子弟何惧于天下',
         'password': '223512',
         'remember_me': 'checked',
         'duration': '-1'
@@ -33,18 +69,15 @@ def login():
     postData = urllib.urlencode(postData)
     headers = HttpHeaders.headers
     headers['Accept'] = 'application/json, text/javascript, */*; q=0.01'
-    headers['Content-Length'] = '200'
     headers['Referer'] = 'http://www.qiushibaike.com/'
-    headers['Origin'] = 'http://www.qiushibaike.com/'
+    headers['Origin'] = 'http://www.qiushibaike.com'
     headers['Host'] = 'www.qiushibaike.com'
-    # headers[
-    # 'Cookie'] = 'bdshare_firstime=1421821228300; _qqq_uuid_=6ad5a178f7450619dc6f2a91af4cd3a7ed765f4f; __utmt=1; _qqq_user_id=8655363; Hm_lvt_2670efbdd59c7e3ed3749b458cafaa37=1421821228,1423038765,1423041805; Hm_lpvt_2670efbdd59c7e3ed3749b458cafaa37=1423041950; __utma=210674965.2057819279.1421821228.1423038765.1423041805.3; __utmb=210674965.6.10.1423041805; __utmc=210674965; __utmz=210674965.1421821228.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)'
     request = urllib2.Request(url, postData, headers)
     print request.get_full_url()
     try:
         response = urllib2.urlopen(request)
-    except Exception as e:
-        print(e)
+    except urllib2.HTTPError as e:
+        print e.reason, e.code, e.msg
         print '异常，程序已终止'
         return
 
@@ -54,4 +87,5 @@ def login():
 
 
 login()
+page_loop()
 
