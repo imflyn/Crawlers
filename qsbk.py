@@ -1,20 +1,18 @@
-# coding=utf-8
-
-import urllib.request, urllib.error, urllib.parse, http.cookiejar, os
+import urllib.request, urllib.error, urllib.parse, http.cookiejar
+import os, time
 from bs4 import BeautifulSoup
-
 from common import HttpHeaders
 
 HOST = 'http://www.qiushibaike.com'
 DIRNAME = 'qb'
 
-currentPath = os.getcwd()
+currentPath = os.getcwd() + "\\" + DIRNAME + "\\" + time.strftime('%Y%m%d', time.localtime(time.time()))
 print(currentPath)
 try:
-    if not os.path.exists(currentPath + "\\" + DIRNAME):
-        os.makedirs(currentPath + "\\" + DIRNAME)
+    if not os.path.exists(currentPath):
+        os.makedirs(currentPath)
 except Exception as e:
-    print(e.message)
+    print(e)
 
 
 def decode_page(content):
@@ -56,7 +54,7 @@ def decode_detail(content):
 def download_file(url, filename):
     request = urllib.request.urlopen(url)
     data = request.read()
-    filepath = currentPath + "\\" + DIRNAME + "\\" + filename + ".jpg"
+    filepath = currentPath + "\\" + filename + ".jpg"
     if not os.path.exists(filepath):
         file = open(filepath, 'wb')
         file.write(data)
@@ -119,4 +117,5 @@ def login():
 
 login()
 page_loop()
+
 
