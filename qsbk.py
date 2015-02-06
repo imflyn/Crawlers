@@ -1,5 +1,5 @@
 import urllib.request, urllib.error, urllib.parse, http.cookiejar
-import os, time
+import os
 from bs4 import BeautifulSoup
 from common import HttpHeaders
 
@@ -21,8 +21,8 @@ def decode_page(content):
         print(MASTER_NAME + "打开了网页: <" + request.get_full_url() + ">")
         for key in HttpHeaders.headers:
             request.add_header(key, HttpHeaders.headers[key])
-            request.add_header('Referer', 'http://www.qiushibaike.com/')
-            request.add_header('Origin', 'http://www.qiushibaike.com/')
+        request.add_header('Referer', 'http://www.qiushibaike.com/')
+        request.add_header('Origin', 'http://www.qiushibaike.com/')
         try:
             response = urllib.request.urlopen(request)
         except urllib.error.HTTPError as e:
@@ -79,8 +79,8 @@ def page_loop(page=1):
     print(request.get_full_url())
     for key in HttpHeaders.headers:
         request.add_header(key, HttpHeaders.headers[key])
-        request.add_header('Referer', 'http://www.qiushibaike.com/')
-        request.add_header('Origin', 'http://www.qiushibaike.com/')
+    request.add_header('Referer', 'http://www.qiushibaike.com/')
+    request.add_header('Origin', 'http://www.qiushibaike.com/')
     try:
         response = urllib.request.urlopen(request)
     except urllib.error.HTTPError as e:
