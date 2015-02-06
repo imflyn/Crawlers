@@ -3,16 +3,13 @@ import os, time
 from bs4 import BeautifulSoup
 from common import HttpHeaders
 
+MASTER_NAME = '大神戴腾的爪牙'
+
 HOST = 'http://www.qiushibaike.com'
 DIRNAME = 'qb'
 
-currentPath = os.getcwd() + "\\" + DIRNAME + "\\" + time.strftime('%Y%m%d', time.localtime(time.time()))
-print(currentPath)
-try:
-    if not os.path.exists(currentPath):
-        os.makedirs(currentPath)
-except Exception as e:
-    print(e)
+cwdpath = os.getcwd()
+print(cwdpath)
 
 
 def decode_page(content):
@@ -21,7 +18,7 @@ def decode_page(content):
         sub = tag.find('a')
         href = sub.attrs['href']
         request = urllib.request.Request(HOST + href)
-        print(request.get_full_url())
+        print(MASTER_NAME + "打开了网页: <" + request.get_full_url() + ">")
         for key in HttpHeaders.headers:
             request.add_header(key, HttpHeaders.headers[key])
             request.add_header('Referer', 'http://www.qiushibaike.com/')
@@ -30,7 +27,7 @@ def decode_page(content):
             response = urllib.request.urlopen(request)
         except urllib.error.HTTPError as e:
             print(e.reason, e.code, e.msg)
-            print('异常，程序已终止')
+            print('出现异常，%s已停止运行' % MASTER_NAME)
             return
         data = response.read()
         if data is not None:
@@ -39,28 +36,40 @@ def decode_page(content):
 
 def decode_detail(content):
     soup = BeautifulSoup(content)
-    for tag in soup.find_all('div', 'thumb'):
+    for tag in soup.find_all('div', class_='content'):
+        submit_date = tag.attrs['title']
+        submit_date = submit_date.split(' ')[0]
+    for tag in soup.find_all('div', class_='thumb'):
         try:
             sub = tag.find('img')
             href = sub.attrs['src']
             filename = sub.attrs['alt']
-            print(filename)
-            print("img url:" + href)
-            download_file(href, filename)
+            print(MASTER_NAME + "发现标题: <" + filename + ">")
+            print(MASTER_NAME + "发现链接: <" + href + ">")
+            download_file(href, submit_date, filename)
         except AttributeError as e:
             print(e)
+            print('出现异常，%s已停止运行' % MASTER_NAME)
 
 
-def download_file(url, filename):
+def download_file(url, date, filename):
     request = urllib.request.urlopen(url)
     data = request.read()
-    filepath = currentPath + "\\" + filename + ".jpg"
-    if not os.path.exists(filepath):
-        file = open(filepath, 'wb')
+    fileDir = cwdpath + "\\" + DIRNAME + "\\" + date
+    try:
+        if not os.path.exists(fileDir):
+            os.makedirs(fileDir)
+    except Exception as e:
+        print(e)
+        print('出现异常，%s已停止运行' % MASTER_NAME)
+    filePath = fileDir + "\\" + filename + ".jpg"
+    if not os.path.exists(filePath):
+        file = open(filePath, 'wb')
         file.write(data)
         file.close()
+        print(MASTER_NAME + "保存文件成功!")
     else:
-        print('file exists!')
+        print(MASTER_NAME + "侦测到文件已存在,未下载!")
 
 
 def page_loop(page=1):
@@ -76,7 +85,7 @@ def page_loop(page=1):
         response = urllib.request.urlopen(request)
     except urllib.error.HTTPError as e:
         print(e.reason, e.code, e.msg)
-        print('异常，程序已终止')
+        print('出现异常，%s已停止运行' % MASTER_NAME)
         return
 
     text = response.read()
@@ -108,11 +117,12 @@ def login():
         response = urllib.request.urlopen(request)
     except urllib.error.HTTPError as e:
         print(e.reason, e.code, e.msg)
-        print('异常，程序已终止')
+        print('出现异常，%s已停止运行' % MASTER_NAME)
         return
 
     text = response.read()
     print(text)
+    print(MASTER_NAME + "登录了糗百网页")
 
 
 login()
