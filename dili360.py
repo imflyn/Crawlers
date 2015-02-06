@@ -1,3 +1,4 @@
+# coding=utf-8
 import urllib.request, urllib.error, urllib.parse
 import os
 from bs4 import BeautifulSoup
@@ -70,7 +71,7 @@ def parse_detail(url, dir):
 def save_info(title, filedir, index):
     filePath = filedir + "\\" + "文字说明" + ".txt"
     print(filePath)
-    file = open(filePath, 'a')
+    file = open(filePath, 'a',encoding='utf-8')
     index = index + '.'
     file.write(index)
     file.write(title)
