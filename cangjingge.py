@@ -33,54 +33,55 @@ for hrefs in unit:
     fanhao = fanhao.replace('\n', '')
     print(fanhao)
     # 封面
-    content_right = next_soup.find('div', class_='content_right')
-    juzhao_url = content_right.find('a', class_="fancybox").attrs['href']
-    print(juzhao_url)
-    dir = cwdpath + "\\" + fanhao
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-        print("创建文件夹:" + dir)
-    else:
-        continue
-    try:
-        request = urllib.request.Request(juzhao_url)
-        for key in HttpHeaders.headers:
-            request.add_header(key, HttpHeaders.headers[key])
-        response = urllib.request.urlopen(request)
-        data = response.read()
-    except urllib.error.HTTPError as e:
-        print(e)
-    title = title.replace(' ', '')
-    filePath = dir + "\\" + title + ".jpg"
-    print(filePath)
-    if not os.path.exists(filePath):
-        file = open(filePath, 'wb')
-        file.write(data)
-        file.close()
-    # 剧照
-    next_unit = next_soup.find('div', attrs={'id': 'gallery'})
-    next_hrefs = next_unit.find_all('img')
-    for next_href in next_hrefs:
-        next_img_url = next_href.attrs['src']
-        print(next_img_url)
-        try:
-            request = urllib.request.Request(next_img_url)
-            for key in HttpHeaders.headers:
-                request.add_header(key, HttpHeaders.headers[key])
-            response = urllib.request.urlopen(request)
-            data = response.read()
-        except urllib.error.HTTPError as e:
-            print(e)
-        filePath = dir + "\\" + next_img_url.split('/')[-1]
-        print(filePath)
-        if not os.path.exists(filePath):
-            file = open(filePath, 'wb')
-            file.write(data)
-            file.close()
+    # content_right = next_soup.find('div', class_='content_right')
+    # juzhao_url = content_right.find('a', class_="fancybox").attrs['href']
+    # print(juzhao_url)
+    # dir = cwdpath + "\\" + fanhao
+    # if not os.path.exists(dir):
+    #     os.makedirs(dir)
+    #     print("创建文件夹:" + dir)
+    # else:
+    #     continue
+    # try:
+    #     request = urllib.request.Request(juzhao_url)
+    #     for key in HttpHeaders.headers:
+    #         request.add_header(key, HttpHeaders.headers[key])
+    #     response = urllib.request.urlopen(request)
+    #     data = response.read()
+    # except urllib.error.HTTPError as e:
+    #     print(e)
+    # title = title.replace(' ', '')
+    # filePath = dir + "\\" + title + ".jpg"
+    # print(filePath)
+    # if not os.path.exists(filePath):
+    #     file = open(filePath, 'wb')
+    #     file.write(data)
+    #     file.close()
+    # # 剧照
+    # next_unit = next_soup.find('div', attrs={'id': 'gallery'})
+    # next_hrefs = next_unit.find_all('img')
+    # for next_href in next_hrefs:
+    #     next_img_url = next_href.attrs['src']
+    #     print(next_img_url)
+    #     try:
+    #         request = urllib.request.Request(next_img_url)
+    #         for key in HttpHeaders.headers:
+    #             request.add_header(key, HttpHeaders.headers[key])
+    #         response = urllib.request.urlopen(request)
+    #         data = response.read()
+    #     except urllib.error.HTTPError as e:
+    #         print(e)
+    #     filePath = dir + "\\" + next_img_url.split('/')[-1]
+    #     print(filePath)
+    #     if not os.path.exists(filePath):
+    #         file = open(filePath, 'wb')
+    #         file.write(data)
+    #         file.close()
     # 去下载
     download_url = "http://www.torrentkitty.org/search/%s" % fanhao
+    print(download_url)
     try:
-        request = urllib.request.Request(juzhao_url)
+        request = urllib.request.Request(download_url)
         for key in HttpHeaders.headers:
             request.add_header(key, HttpHeaders.headers[key])
         response = urllib.request.urlopen(request)
