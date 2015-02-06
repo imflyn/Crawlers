@@ -60,6 +60,8 @@ def download_file(url, filename):
         file = open(filepath, 'wb')
         file.write(data)
         file.close()
+    else:
+        print('file exists!')
 
 
 def page_loop(page=1):
