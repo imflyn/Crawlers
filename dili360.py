@@ -62,7 +62,6 @@ def parse_detail(url, dir):
         url = tag.attrs['data-source']
         title = tag.attrs['data-text']
         print("图片网址:" + url)
-        print(title)
         index = index + 1
         save_img(url, dir, str(index))
         save_info(title, dir, str(index))
@@ -71,12 +70,15 @@ def parse_detail(url, dir):
 def save_info(title, filedir, index):
     filePath = filedir + "\\" + "文字说明" + ".txt"
     print(filePath)
-    file = open(filePath, 'a',encoding='utf-8')
+    file = open(filePath, 'a', encoding='utf-8')
     index = index + '.'
-    file.write(index)
-    file.write(title)
-    file.write("\n")
-    file.close()
+    try:
+        file.write(index)
+        file.write(title)
+        file.write("\n")
+        file.close()
+    except Exception:
+        return
 
 
 def save_img(url, filedir, filename):
