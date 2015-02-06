@@ -40,6 +40,8 @@ for hrefs in unit:
     if not os.path.exists(dir):
         os.makedirs(dir)
         print("创建文件夹:" + dir)
+    else:
+        continue
     try:
         request = urllib.request.Request(juzhao_url)
         for key in HttpHeaders.headers:
