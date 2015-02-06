@@ -5,42 +5,72 @@ from bs4 import BeautifulSoup
 
 from common import HttpHeaders
 
+HOST = 'http://www.qiushibaike.com'
+DIRNAME = 'qb'
+
 currentPath = os.getcwd()
 print currentPath
 try:
-    os.mkdir("/qsbk")
-except Exception:
-    pass
+    os.makedirs(currentPath + "\\" + DIRNAME)
+except Exception as e:
+    print e.message
 
 
-def decoder(content):
+def decode_page(content):
     soup = BeautifulSoup(content)
-    for tag in soup.find_all('div', class_='article block untagged mb15'):
+    for tag in soup.find_all('div', class_='thumb'):
+        sub = tag.find('a')
+        href = sub.attrs['href']
+        request = urllib2.Request(HOST + href)
+        print request.get_full_url()
+        for key in HttpHeaders.headers:
+            request.add_header(key, HttpHeaders.headers[key])
+        request.add_header('Referer', 'http://www.qiushibaike.com/')
+        request.add_header('Origin', 'http://www.qiushibaike.com/')
+        try:
+            response = urllib2.urlopen(request)
+        except urllib2.HTTPError as e:
+            print e.reason, e.code, e.msg
+            print '异常，程序已终止'
+            return
+        data = response.read()
+        if data is not None:
+            decode_detail(data)
+
+
+def decode_detail(content):
+    soup = BeautifulSoup(content)
+    for tag in soup.find_all('div', 'thumb'):
         try:
             sub = tag.find('img')
-            imgurl = sub.attrs['src']
-            print(imgurl)
-            request = urllib2.urlopen(imgurl)
-            data = request.read()
-            request.close
-            file = open(currentPath + "\qsbk\\" + imgurl.split('/')[-1], 'wb')
-            file.write(data)
-            file.close()
+            href = sub.attrs['src']
+            filename = sub.attrs['alt']
+            print filename
+            print "img url:" + href
+            download_file(href, filename)
         except AttributeError as e:
             print e
 
 
+def download_file(url, filename):
+    request = urllib2.urlopen(url)
+    data = request.read()
+    filepath = currentPath + "\\" + DIRNAME + "\\" + filename + ".jpg"
+    if not os.path.exists(filepath):
+        file = open(filepath, 'wb')
+        file.write(data)
+        file.close()
+
+
 def page_loop(page=1):
     print "第%s页" % page
-    url = "http://www.qiushibaike.com/imgrank/page/%s?s=4743721" % page
+    url = "http://www.qiushibaike.com/imgrank/page/%s?s=4743947" % page
     request = urllib2.Request(url)
     print request.get_full_url()
     for key in HttpHeaders.headers:
         request.add_header(key, HttpHeaders.headers[key])
     request.add_header('Referer', 'http://www.qiushibaike.com/')
     request.add_header('Origin', 'http://www.qiushibaike.com/')
-    request.add_header('Cookie',
-                       'bdshare_firstime=1421821228300; _qqq_uuid_=6ad5a178f7450619dc6f2a91af4cd3a7ed765f4f; __utmt=1; _qqq_user_id=8655363; Hm_lvt_2670efbdd59c7e3ed3749b458cafaa37=1421821228,1423038765,1423041805; Hm_lpvt_2670efbdd59c7e3ed3749b458cafaa37=1423041950; __utma=210674965.2057819279.1421821228.1423038765.1423041805.3; __utmb=210674965.6.10.1423041805; __utmc=210674965; __utmz=210674965.1421821228.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none)')
     try:
         response = urllib2.urlopen(request)
     except urllib2.HTTPError as e:
@@ -49,8 +79,7 @@ def page_loop(page=1):
         return
 
     text = response.read()
-    decoder(text)
-
+    decode_page(text)
     page_loop(page + 1)
 
 
