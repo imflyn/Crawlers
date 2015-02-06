@@ -47,6 +47,15 @@ def getContent(url):
     str = urllib.request.urlopen(url).read()
     return str
 
+
+def page_loop(page=1):
+    print(url)
+    # 获取网页内容
+    html = urllib.request.urlopen(url + "/" + str(page)).read()
+    parse_img_list(html, column)
+    page_loop(page + 1)
+
+
 # ========================过程========================
 
 content = getContent('http://www.dili360.com/gallery')
@@ -58,10 +67,7 @@ for (column, url) in gallery.items():
     if not os.path.exists(dir):
         os.makedirs(dir)
         print("创建文件夹:" + dir)
-
-    # 获取网页内容
-    html = urllib.request.urlopen(url).read()
-    parse_img_list(html, column)
+    page_loop()
 
 
 
