@@ -1,21 +1,10 @@
 # coding=utf-8
 import urllib.request
-import time
+import time, re
 
 
-def login():
-    url = 'http://www.baidu.com'
-    request = urllib.request.Request(url)
-    try:
-        response = urllib.request.urlopen(request)
-    except Exception as e:
-        print(e)
-        print('异常，程序已终止')
-        return
+str = 'http://www.dili360.com/gallery/cate/2/1.htm'
+rs = re.search('/', str)
+print(rs.endpos - 1)
 
-    text = response.read()
-    print(text)
-
-
-# login()
-print(time.strftime('%Y%m%d', time.localtime(time.time())))
+print(str(str.index(rs.endpos - 1)))
