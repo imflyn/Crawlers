@@ -77,4 +77,23 @@ for hrefs in unit:
             file = open(filePath, 'wb')
             file.write(data)
             file.close()
+    # 去下载
+    download_url = "http://www.torrentkitty.org/search/%s" % fanhao
+    try:
+        request = urllib.request.Request(juzhao_url)
+        for key in HttpHeaders.headers:
+            request.add_header(key, HttpHeaders.headers[key])
+        response = urllib.request.urlopen(request)
+        data = response.read()
+    except urllib.error.HTTPError as e:
+        print(e)
+    download_soup = BeautifulSoup(data)
+    main = download_soup.find('table', attrs={'id': 'archiveResult'})
+    list = main.find_all('a')
+    for tag in list:
+        href = tag.attrs['href']
+        if href.startswith('magnet:'):
+            print(href)
+
+print('结束')
 
