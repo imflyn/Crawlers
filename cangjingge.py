@@ -1,10 +1,12 @@
 # coding=utf-8
 import urllib.request, urllib.error, urllib.parse
-import os
+import os, codecs, time
 from bs4 import BeautifulSoup
 from common import HttpHeaders
 
 HOST = 'http://www.av9.cc'
+
+start_time = time.time()
 
 cwdpath = os.getcwd()
 cwdpath = cwdpath + "\\" + "藏经阁"
@@ -103,7 +105,7 @@ for hrefs in unit:
             print(href)
             filePath = dir + "\\" + "链接" + ".txt"
             print(filePath)
-            file = open(filePath, 'a', encoding='utf-8')
+            file = codecs.open(filePath, 'a', encoding='utf-8')
             num = num + 1
             index = str(num) + '.'
             try:
@@ -114,5 +116,6 @@ for hrefs in unit:
             except Exception:
                 continue
 
+print('耗时:' + str((time.time() - start_time)))
 print('结束')
 
