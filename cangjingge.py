@@ -63,6 +63,8 @@ for hrefs in unit:
         file.close()
     # 剧照
     next_unit = next_soup.find('div', attrs={'id': 'gallery'})
+    if next_unit is None:
+        continue
     next_hrefs = next_unit.find_all('img')
     for next_href in next_hrefs:
         next_img_url = next_href.attrs['src']
