@@ -124,8 +124,8 @@ def login():
     print(text)
     print(MASTER_NAME + "登录了糗百网页")
 
-
-login()
-page_loop()
+if __name__ == '__main__':
+    login()
+    page_loop()
 
 
