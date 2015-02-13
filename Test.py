@@ -1,6 +1,9 @@
 # coding=utf-8
-import urllib.request
-import time, re
 
-start_time = time.time()
-print('耗时:' + str((time.time() - start_time)))
+from string import Template
+
+
+str = Template('打印出了${a}')
+print(str.substitute(a='''Hello,World'''))
+
+
