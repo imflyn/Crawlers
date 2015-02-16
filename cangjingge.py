@@ -15,7 +15,10 @@ print(cwdpath)
 proxy = urllib.request.ProxyHandler({'http': '127.0.0.1:8087'})
 opener = urllib.request.build_opener(proxy)
 urllib.request.install_opener(opener)
-content = urllib.request.urlopen("http://www.av9.cc/Home/Index").read()
+request = urllib.request.Request(HOST + "/Home/Index")
+for key in HttpHeaders.headers:
+    request.add_header(key, HttpHeaders.headers[key])
+content = urllib.request.urlopen(request).read()
 soup = BeautifulSoup(content)
 main = soup.find('div', class_='category')
 unit = main.find_all('div', class_='unit')
@@ -26,7 +29,10 @@ for hrefs in unit:
     proxy = urllib.request.ProxyHandler({'http': '127.0.0.1:8087'})
     opener = urllib.request.build_opener(proxy)
     urllib.request.install_opener(opener)
-    content = urllib.request.urlopen(nextUrl).read()
+    request = urllib.request.Request(nextUrl)
+    for key in HttpHeaders.headers:
+        request.add_header(key, HttpHeaders.headers[key])
+    content = urllib.request.urlopen(request).read()
     next_soup = BeautifulSoup(content)
     # 标题
     title = next_soup.find('title').getText()
