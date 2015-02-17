@@ -100,7 +100,7 @@ for hrefs in unit:
             request.add_header(key, HttpHeaders.headers[key])
         response = urllib.request.urlopen(request)
         data = response.read()
-    except urllib.error.HTTPError as e:
+    except Exception as e:
         print(e)
         continue
     download_soup = BeautifulSoup(data)
